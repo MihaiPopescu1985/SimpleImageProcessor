@@ -32,16 +32,10 @@ public class MainWindow {
 	private JFrame mainWindow;
 	EventProcessing eventProcessing;
 	
-	private JMenuBar menuBar;
-	private JMenu fileMenu;
-	private JMenu aboutMenu;
-	private JMenuItem open;
-	private JMenuItem save;
-	private JMenuItem saveAs;
-	private JMenuItem quit;
-	private JMenuItem aboutApp;
-	private JMenuItem aboutAuthor;
+
+
 	private JLabel imageViewer;
+	private JPanel optionsPanel;
 	
 	BufferedImage image = null;
 	
@@ -64,7 +58,7 @@ public class MainWindow {
 	private void createViews() {
 		
 		imageViewer = new JLabel();
-		JPanel optionsPanel = new JPanel(new BorderLayout());
+		optionsPanel = new JPanel(new BorderLayout());
 		
 		optionsPanel.setOpaque(true);
 		optionsPanel.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
@@ -135,28 +129,34 @@ public class MainWindow {
 		// To be implemented
 	}
 	
+	
 	public void exitProgram() {
 		System.exit(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 	
+	
 	private void createMenu() {
 		
-		menuBar = new JMenuBar();
+		JMenuBar menuBar = new JMenuBar();;
+		JMenu fileMenu = new JMenu("File");
+		JMenu aboutMenu = new JMenu("About");
 		
-		fileMenu = new JMenu("File");
-		open = new JMenuItem("Open");
+		JMenuItem open = new JMenuItem("Open");
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem saveAs = new JMenuItem("Save as...");
+		JMenuItem quit = new JMenuItem("Quit");
+		JMenuItem aboutApp = new JMenuItem("About this software");
+		JMenuItem aboutAuthor = new JMenuItem("About author");
+		
 		open.addActionListener(eventProcessing);
 		open.setActionCommand("open file");
 		
-		save = new JMenuItem("Save");
 		save.addActionListener(eventProcessing);
 		save.setActionCommand("save file");
 		
-		saveAs = new JMenuItem("Save as...");
 		saveAs.addActionListener(eventProcessing);
 		saveAs.setActionCommand("save file as");
 		
-		quit = new JMenuItem("Quit");
 		quit.addActionListener(eventProcessing);
 		quit.setActionCommand("exit program");
 		
@@ -167,13 +167,9 @@ public class MainWindow {
 		fileMenu.add(quit);
 		menuBar.add(fileMenu);
 		
-		aboutMenu = new JMenu("About");
-		
-		aboutApp = new JMenuItem("About this software");
 		aboutApp.addActionListener(eventProcessing);
 		aboutApp.setActionCommand("about app");
 		
-		aboutAuthor = new JMenuItem("About author");
 		aboutAuthor.addActionListener(eventProcessing);
 		aboutAuthor.setActionCommand("about author");
 		
