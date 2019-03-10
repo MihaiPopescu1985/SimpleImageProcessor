@@ -1,12 +1,14 @@
 package imageProcessing;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -14,17 +16,20 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class MainWindow {
 
-	private final int WIDTH = 600;
-	private final int HEIGHT = 500;
+	private final int WINDOW_WIDTH = 600;
+	private final int WINDOW_HEIGHT = 500;
+	private final int PREFERRED_WIDTH = 200;
+	private final int PREFERRED_HEIGHT = 100;
 	
 	private int iconWidth;
 	private int iconHeight;
 	
 	private JFrame mainWindow;
-	private GridBagLayout mainWindowLayout;
 	EventProcessing eventProcessing;
 	
 	private JMenuBar menuBar;
@@ -43,7 +48,7 @@ public class MainWindow {
 	public MainWindow() {
 		
 		mainWindow = new JFrame("Simple image processing");
-		mainWindow.setSize(WIDTH, HEIGHT);
+		mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		eventProcessing = new EventProcessing(this);
@@ -58,17 +63,22 @@ public class MainWindow {
 	
 	private void createViews() {
 		
-		mainWindowLayout = new GridBagLayout();
 		imageViewer = new JLabel();
-		GridBagConstraints bagConstraints = new GridBagConstraints();
+		JPanel optionsPanel = new JPanel(new BorderLayout());
 		
-		mainWindow.setLayout(mainWindowLayout);
+		optionsPanel.setOpaque(true);
+		optionsPanel.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+		optionsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
-		bagConstraints.weightx = 40;
-		bagConstraints.fill  = GridBagConstraints.BOTH;
+		imageViewer.setOpaque(true);
+		imageViewer.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+		imageViewer.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		imageViewer.setBackground(Color.WHITE);
 		
-		mainWindowLayout.setConstraints(imageViewer, bagConstraints);
-		mainWindow.add(imageViewer);
+		mainWindow.add(optionsPanel, BorderLayout.LINE_START);
+		mainWindow.add(imageViewer, BorderLayout.CENTER);
+		
+		mainWindow.setVisible(true);
 	}
 	
 	public void openFile() {
@@ -87,24 +97,42 @@ public class MainWindow {
 		}
 		
 		if(image != null) {
+			double ratio = 0;
+			
 			iconWidth = image.getWidth();
 			iconHeight = image.getHeight();
 			
-			imageViewer.setIcon(new ImageIcon(image));
+			int viewerWidth = imageViewer.getWidth();
+			int viewerHeight = imageViewer.getHeight();
+			
+			double widthRatio = (double)iconWidth / (double)viewerWidth;
+			double heightRatio = (double)iconHeight / (double)viewerHeight;
+			
+			if(widthRatio > 1 && heightRatio > 1) {
+				if(widthRatio > heightRatio) {
+					ratio = (double)iconHeight / (double)iconWidth;
+					
+					iconWidth = viewerWidth;
+					iconHeight = (int) (iconWidth * ratio);
+				} else {
+					ratio = (double)iconWidth / (double)iconHeight;
+					
+					iconHeight = viewerHeight;
+					iconWidth = (int) (iconHeight * ratio);
+				}
+			}
+			
+			Image iconImage = image.getScaledInstance(iconWidth, iconHeight, Image.SCALE_SMOOTH);
+			
+			imageViewer.setIcon(new ImageIcon(iconImage));
+			imageViewer.setHorizontalAlignment(SwingConstants.CENTER);
+			imageViewer.setVerticalAlignment(SwingConstants.CENTER);
 			imageViewer.addMouseWheelListener(eventProcessing);
-			imageViewer.setOpaque(true);
-		
-			mainWindow.add(imageViewer);
-			mainWindow.setVisible(true);
 		}
 	}
 	
 	public void zoomImage(int notches) {
-		
-		iconWidth = iconWidth + (10 * notches);
-		iconHeight = iconHeight + (10 * notches);
-		
-		imageViewer.setIcon(new ImageIcon(image.getScaledInstance(iconWidth, iconHeight, Image.SCALE_REPLICATE)));
+		// To be implemented
 	}
 	
 	public void exitProgram() {
