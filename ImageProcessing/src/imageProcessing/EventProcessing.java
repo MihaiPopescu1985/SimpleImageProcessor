@@ -36,6 +36,12 @@ public class EventProcessing implements ActionListener, MouseWheelListener {
 						
 		if(actionCommand.compareTo("about author") == 0)
 			System.out.println("about author");
+		
+		if(actionCommand.compareTo("display image properties") == 0)
+			window.displayImageProperties();
+		
+		if(actionCommand.compareTo("change RGB colors") == 0)
+			window.changeRGBColors();
 	}
 
 	@Override

@@ -3,12 +3,15 @@ package imageProcessing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -17,7 +20,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class MainWindow {
 
@@ -31,8 +36,6 @@ public class MainWindow {
 	
 	private JFrame mainWindow;
 	EventProcessing eventProcessing;
-	
-
 
 	private JLabel imageViewer;
 	private JPanel optionsPanel;
@@ -43,9 +46,41 @@ public class MainWindow {
 		
 		mainWindow = new JFrame("Simple image processing");
 		mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		mainWindow.setResizable(false);
+		mainWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		eventProcessing = new EventProcessing(this);
+		mainWindow.setVisible(true);
+	}
+	
+	public void displayImageProperties() {
+		
+		optionsPanel.removeAll();
+		
+		LayoutManager imagePropertiesLayout = new FlowLayout();
+		JLabel imageWidth = new JLabel();
+		imageWidth.setText("Image width : " + image.getWidth());
+		imagePropertiesLayout.addLayoutComponent("image width", imageWidth);
+		
+		JLabel imageHeight = new JLabel();
+		imageHeight.setText("Image height : " + image.getHeight());
+		imagePropertiesLayout.addLayoutComponent("image height", imageHeight);
+		
+		optionsPanel.add(imageWidth);
+		optionsPanel.add(imageHeight);
+		
+		optionsPanel.setLayout(imagePropertiesLayout);
+		mainWindow.setVisible(true);
+	}
+
+	public void changeRGBColors() {
+		
+		optionsPanel.removeAll();
+		
+		LayoutManager changeRGBColors = new FlowLayout();
+		optionsPanel.setLayout(changeRGBColors);
+		
 		mainWindow.setVisible(true);
 	}
 	
@@ -78,6 +113,8 @@ public class MainWindow {
 	public void openFile() {
 		
 		JFileChooser imageChooser = new JFileChooser();
+		imageChooser.setFileFilter(new FileNameExtensionFilter("jpg, jpeg, png, gif images","png", "jpeg", "jpg", "gif"));
+		
 		int returnValue = imageChooser.showOpenDialog(null);
 		
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
@@ -137,16 +174,13 @@ public class MainWindow {
 	
 	private void createMenu() {
 		
-		JMenuBar menuBar = new JMenuBar();;
-		JMenu fileMenu = new JMenu("File");
-		JMenu aboutMenu = new JMenu("About");
+		JMenuBar menuBar = new JMenuBar();
 		
+		JMenu fileMenu = new JMenu("File");
 		JMenuItem open = new JMenuItem("Open");
 		JMenuItem save = new JMenuItem("Save");
 		JMenuItem saveAs = new JMenuItem("Save as...");
 		JMenuItem quit = new JMenuItem("Quit");
-		JMenuItem aboutApp = new JMenuItem("About this software");
-		JMenuItem aboutAuthor = new JMenuItem("About author");
 		
 		open.addActionListener(eventProcessing);
 		open.setActionCommand("open file");
@@ -166,6 +200,27 @@ public class MainWindow {
 		fileMenu.addSeparator();
 		fileMenu.add(quit);
 		menuBar.add(fileMenu);
+		
+		JMenu windowMenu = new JMenu("Window");
+		ButtonGroup radioMenuButtonGroup = new ButtonGroup();
+		JMenuItem radioButtonMenuItem = new JRadioButtonMenuItem("Image properties");
+
+		radioButtonMenuItem.setActionCommand("display image properties");
+		radioButtonMenuItem.addActionListener(eventProcessing);
+		radioMenuButtonGroup.add(radioButtonMenuItem);
+		windowMenu.add(radioButtonMenuItem);
+		
+		radioButtonMenuItem = new JRadioButtonMenuItem("RGB colors");
+		radioButtonMenuItem.setActionCommand("change RGB colors");
+		radioButtonMenuItem.addActionListener(eventProcessing);
+		radioMenuButtonGroup.add(radioButtonMenuItem);
+		windowMenu.add(radioButtonMenuItem);
+		
+		menuBar.add(windowMenu);
+		
+		JMenu aboutMenu = new JMenu("About");
+		JMenuItem aboutApp = new JMenuItem("About this software");
+		JMenuItem aboutAuthor = new JMenuItem("About author");
 		
 		aboutApp.addActionListener(eventProcessing);
 		aboutApp.setActionCommand("about app");
