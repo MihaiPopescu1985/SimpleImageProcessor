@@ -1,5 +1,6 @@
 package imageProcessor;
 
+import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ImageProcessor {
@@ -44,14 +46,29 @@ public class ImageProcessor {
 			
 			String message = e.getActionCommand();
 			
+			if(message.compareTo("open file") == 0) imageProcessor.openFile();
+			
+			if(message.compareTo("save file") == 0) imageProcessor.showMessage("Not yet implemented");
+			
+			if(message.compareTo("save file as") == 0) imageProcessor.showMessage("Not yet implemented");
+			
 			if(message.compareTo("exit program") == 0) imageProcessor.exitProgram();
 			
-			if(message.compareTo("open file") == 0) imageProcessor.openFile();
+			if(message.compareTo("about app") == 0) imageProcessor.showMessage("Simple image processing");
+			
+			if(message.compareTo("about author") == 0) imageProcessor.showMessage("Mihai Popescu, justmaryo@gmail.com");
+			
+			if(message.compareTo("resize image") == 0) imageProcessor.showMessage("Not yet implemented");
 			
 			if(message.compareTo("set brightness") == 0) imageProcessor.setBrightness();
 		}
 	}
 	
+	public void showMessage(String message) {
+		
+		JOptionPane.showMessageDialog((Component) mainWindow, message);
+	}
+
 	public void addOption(Menu newMenu) {
 		
 		mainWindow.addMenu(newMenu);
@@ -72,7 +89,7 @@ public class ImageProcessor {
 				
 			} catch (IOException e) {
 				
-				System.out.println("Cannot open image.");
+				this.showMessage("Cannot open image.");
 				e.printStackTrace();
 				
 			} finally {
@@ -83,7 +100,10 @@ public class ImageProcessor {
 	
 	public void setBrightness() {
 		
-		if(image == null) this.openFile();
+		if(image == null) {
+			this.openFile();
+			setBrightness();
+		}
 		
 		else {
 			optionsDialog = new JDialog((Frame) mainWindow, "Adjust brightness", false);
