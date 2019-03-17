@@ -3,6 +3,7 @@ package imageProcessor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -94,7 +95,7 @@ public class MainWindow extends JFrame implements Window {
 		
 		this.setTitle("Simple image processing.");
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

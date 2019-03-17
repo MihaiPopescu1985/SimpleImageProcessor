@@ -1,5 +1,8 @@
 package imageProcessor;
 
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -25,6 +28,28 @@ public class ImageProcessor {
 		
 		mainWindow = new MainWindow();
 		mainWindow.createWindow(eventProcessor);
+	}
+	
+	public class ProcessEvents implements ActionListener {
+		
+		private ImageProcessor imageProcessor;
+		
+		public ProcessEvents(ImageProcessor newImageProcessor) {
+			
+			this.imageProcessor = newImageProcessor;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			String message = e.getActionCommand();
+			
+			if(message.compareTo("exit program") == 0) imageProcessor.exitProgram();
+			
+			if(message.compareTo("open file") == 0) imageProcessor.openFile();
+			
+			if(message.compareTo("set brightness") == 0) imageProcessor.setBrightness();
+		}
 	}
 	
 	public void addOption(Menu newMenu) {
@@ -61,7 +86,10 @@ public class ImageProcessor {
 		if(image == null) this.openFile();
 		
 		else {
-			optionsDialog = new JDialog();
+			optionsDialog = new JDialog((Frame) mainWindow, "Adjust brightness", false);
+			optionsDialog.setSize(200, 100);
+			optionsDialog.setLocation((int)java.awt.Window.CENTER_ALIGNMENT,(int) java.awt.Window.CENTER_ALIGNMENT);
+			optionsDialog.setVisible(true);
 		}
 	}
 	
@@ -72,5 +100,4 @@ public class ImageProcessor {
 		imageProcessor.addOption(new ProcessMenu("Resize", "resize image"));
 		imageProcessor.addOption(new ProcessMenu("Set brightness", "set brightness"));
 	}
-	
 }
