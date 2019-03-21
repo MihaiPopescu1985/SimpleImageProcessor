@@ -48,19 +48,19 @@ public class ImageProcessor {
 			
 			if(message.compareTo("open file") == 0) imageProcessor.openFile();
 			
-			if(message.compareTo("save file") == 0) imageProcessor.showMessage("Not yet implemented");
+			else if(message.compareTo("save file") == 0) imageProcessor.showMessage("Not yet implemented");
 			
-			if(message.compareTo("save file as") == 0) imageProcessor.showMessage("Not yet implemented");
+			else if(message.compareTo("save file as") == 0) imageProcessor.showMessage("Not yet implemented");
 			
-			if(message.compareTo("exit program") == 0) imageProcessor.exitProgram();
+			else if(message.compareTo("exit program") == 0) imageProcessor.exitProgram();
 			
-			if(message.compareTo("about app") == 0) imageProcessor.showMessage("Simple image processing");
+			else if(message.compareTo("about app") == 0) imageProcessor.showMessage("Simple image processing");
 			
-			if(message.compareTo("about author") == 0) imageProcessor.showMessage("Mihai Popescu, justmaryo@gmail.com");
+			else if(message.compareTo("about author") == 0) imageProcessor.showMessage("Mihai Popescu, justmaryo@gmail.com");
 			
-			if(message.compareTo("resize image") == 0) imageProcessor.showMessage("Not yet implemented");
+			else if(message.compareTo("resize image") == 0) imageProcessor.showMessage("Not yet implemented");
 			
-			if(message.compareTo("set brightness") == 0) imageProcessor.setBrightness();
+			else if(message.compareTo("set brightness") == 0) imageProcessor.setBrightness();
 		}
 	}
 	
