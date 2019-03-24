@@ -1,13 +1,17 @@
 package imageProcessor;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
+import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -61,12 +65,65 @@ public class ImageProcessor {
 			else if(message.compareTo("resize image") == 0) imageProcessor.showMessage("Not yet implemented");
 			
 			else if(message.compareTo("set brightness") == 0) imageProcessor.setBrightness();
+			
+			else if(message.compareTo("increment brightness") == 0) imageProcessor.incrementBrightness();
+			
+			else if(message.compareTo("decrement brightness") == 0) imageProcessor.decrementBrightness();
+			
+			else if(message.compareTo("mirror image") == 0) imageProcessor.mirrorImage();
 		}
 	}
 	
 	public void showMessage(String message) {
 		
 		JOptionPane.showMessageDialog((Component) mainWindow, message);
+	}
+
+	public void mirrorImage() {
+		
+		if(image == null)
+			openFile();
+		
+		int width = image.getWidth();
+		int height = image.getHeight();
+		
+		BufferedImage imageMirrored = new BufferedImage(width+1, height, image.getType());
+		
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				
+				int mirrorWidth = width - i;
+				imageMirrored.setRGB(mirrorWidth, j, image.getRGB(i, j));
+			}
+		}
+		image = imageMirrored;
+		mainWindow.showImage(image);
+	}
+
+	public void decrementBrightness() {
+		
+		int width = image.getWidth();
+		int height = image.getHeight();
+		
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				image.setRGB(i, j, new Color(image.getRGB(i, j)).darker().getRGB());
+			}
+		}
+		mainWindow.showImage(image);
+	}
+
+	public void incrementBrightness() {
+		
+		int width = image.getWidth();
+		int height = image.getHeight();
+		
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				image.setRGB(i, j, new Color(image.getRGB(i, j)).brighter().getRGB());
+			}
+		}
+		mainWindow.showImage(image);
 	}
 
 	public void addOption(Menu newMenu) {
@@ -106,11 +163,29 @@ public class ImageProcessor {
 		}
 		
 		else {
-			optionsDialog = new JDialog((Frame) mainWindow, "Adjust brightness", false);
-			optionsDialog.setSize(200, 100);
-			optionsDialog.setLocation((int)java.awt.Window.CENTER_ALIGNMENT,(int) java.awt.Window.CENTER_ALIGNMENT);
+			createDialog((Frame) mainWindow, "Adjust brightness", true, 400, 100, new GridLayout());
+			
+			optionsDialog.add(createButton("Increment brightness", "increment brightness"));
+			optionsDialog.add(createButton("Decrement brightness", "decrement brightness"));
+			
 			optionsDialog.setVisible(true);
 		}
+	}
+	
+	private void createDialog(Frame frame, String title, boolean modal, int width, int height, LayoutManager layout) {
+		
+		optionsDialog = new JDialog(frame, title, modal);
+		optionsDialog.setSize(width, height);
+		optionsDialog.setLocationRelativeTo(null);
+		optionsDialog.setLayout(layout);
+	}
+	
+	private JButton createButton(String title, String command) {
+		JButton button = new JButton(title);
+		button.setActionCommand(command);
+		button.addActionListener(eventProcessor);
+		
+		return button;
 	}
 	
 	public static void main(String[] args) {
@@ -119,5 +194,6 @@ public class ImageProcessor {
 		
 		imageProcessor.addOption(new ProcessMenu("Resize", "resize image"));
 		imageProcessor.addOption(new ProcessMenu("Set brightness", "set brightness"));
+		imageProcessor.addOption(new ProcessMenu("Mirror", "mirror image"));
 	}
 }
