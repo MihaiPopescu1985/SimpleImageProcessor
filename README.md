@@ -2,7 +2,7 @@
 
 <h3>Code design</h3>
 
-<p>The code is design in turn of three classes:</p>
+<p>The code is designed in turn of three classes:</p>
 <ol>
   <li>an Window class that displays (the working image, menu, buttons)</li>
   <li>an ImageProcessor class responsible for applying changes to selected image</li>
