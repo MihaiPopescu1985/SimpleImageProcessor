@@ -8,6 +8,7 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -27,6 +28,8 @@ public class ImageProcessor {
 	private BufferedImage image;
 	
 	private JDialog optionsDialog;
+	
+	private File imageFile;
 	
 	
 	public ImageProcessor() {
@@ -55,7 +58,18 @@ public class ImageProcessor {
 			
 			else if(message.compareTo("save file") == 0) {
 				
-				imageProcessor.showMessage("This will overwrite original image");
+				if(isOkSelected("This will overwrite original image") == JOptionPane.OK_OPTION) {
+					
+					try {
+						ImageIO.write(image, "jpg", imageFile);
+						
+					} catch (IOException e1) {
+						imageProcessor.showMessage("Error saving image.");
+						
+					} catch (IllegalArgumentException ie) {
+						imageProcessor.showMessage("No image.");
+					}
+				}
 			}
 			
 			else if(message.compareTo("save file as") == 0) imageProcessor.showMessage("Not yet implemented");
@@ -81,6 +95,16 @@ public class ImageProcessor {
 	public void showMessage(String message) {
 		
 		JOptionPane.showMessageDialog((Component) mainWindow, message);
+	}
+	
+	public int isOkSelected(String message) {
+		
+		return JOptionPane.showConfirmDialog(
+				(Component) mainWindow, 
+				message, 
+				"Attention !",
+				JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void mirrorImage() {
@@ -146,7 +170,8 @@ public class ImageProcessor {
 		
 		if(returnValue == JFileChooser.APPROVE_OPTION) {
 			try {
-				image = ImageIO.read(imageChooser.getSelectedFile());
+				imageFile = imageChooser.getSelectedFile();
+				image = ImageIO.read(imageFile);
 				
 			} catch (IOException e) {
 				
