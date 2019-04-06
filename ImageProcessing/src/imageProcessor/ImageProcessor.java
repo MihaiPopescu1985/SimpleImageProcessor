@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+
 public class ImageProcessor {
 	
 	private ProcessEvents eventProcessor;
@@ -52,7 +53,10 @@ public class ImageProcessor {
 			
 			if(message.compareTo("open file") == 0) imageProcessor.openFile();
 			
-			else if(message.compareTo("save file") == 0) imageProcessor.showMessage("Not yet implemented");
+			else if(message.compareTo("save file") == 0) {
+				
+				imageProcessor.showMessage("This will overwrite original image");
+			}
 			
 			else if(message.compareTo("save file as") == 0) imageProcessor.showMessage("Not yet implemented");
 			
