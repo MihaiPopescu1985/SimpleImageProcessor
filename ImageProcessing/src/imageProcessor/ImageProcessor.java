@@ -25,7 +25,7 @@ public class ImageProcessor {
 
 	private Window mainWindow;
 	
-	private BufferedImage image;
+	private volatile BufferedImage image;
 	
 	private JDialog optionsDialog;
 	
@@ -108,50 +108,54 @@ public class ImageProcessor {
 	}
 
 	public void mirrorImage() {
-		
-		if(image == null)
-			openFile();
-		
-		int width = image.getWidth();
-		int height = image.getHeight();
-		
-		BufferedImage imageMirrored = new BufferedImage(width+1, height, image.getType());
-		
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				
-				int mirrorWidth = width - i;
-				imageMirrored.setRGB(mirrorWidth, j, image.getRGB(i, j));
+		new Thread(() -> {
+			if(image == null)
+				openFile();
+			
+			int width = image.getWidth();
+			int height = image.getHeight();
+			
+			BufferedImage imageMirrored = new BufferedImage(width+1, height, image.getType());
+			
+			for(int i = 0; i < width; i++) {
+				for(int j = 0; j < height; j++) {
+					
+					int mirrorWidth = width - i;
+					imageMirrored.setRGB(mirrorWidth, j, image.getRGB(i, j));
+				}
 			}
-		}
-		image = imageMirrored;
-		mainWindow.showImage(image);
+			image = imageMirrored;
+			mainWindow.showImage(image);
+		}).start();
 	}
 
 	public void decrementBrightness() {
-		
-		int width = image.getWidth();
-		int height = image.getHeight();
-		
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				image.setRGB(i, j, new Color(image.getRGB(i, j)).darker().getRGB());
+		new Thread(() -> {
+			int width = image.getWidth();
+			int height = image.getHeight();
+			
+			for(int i = 0; i < width; i++) {
+				for(int j = 0; j < height; j++) {
+					image.setRGB(i, j, new Color(image.getRGB(i, j)).darker().getRGB());
+				}
 			}
-		}
-		mainWindow.showImage(image);
+			mainWindow.showImage(image);
+		}).start();
 	}
 
 	public void incrementBrightness() {
 		
-		int width = image.getWidth();
-		int height = image.getHeight();
-		
-		for(int i = 0; i < width; i++) {
-			for(int j = 0; j < height; j++) {
-				image.setRGB(i, j, new Color(image.getRGB(i, j)).brighter().getRGB());
+		new Thread(() -> {
+			int width = image.getWidth();
+			int height = image.getHeight();
+			
+			for(int i = 0; i < width; i++) {
+				for(int j = 0; j < height; j++) {
+					image.setRGB(i, j, new Color(image.getRGB(i, j)).brighter().getRGB());
+				}
 			}
-		}
-		mainWindow.showImage(image);
+			mainWindow.showImage(image);
+		}).start();
 	}
 
 	public void addOption(Menu newMenu) {
