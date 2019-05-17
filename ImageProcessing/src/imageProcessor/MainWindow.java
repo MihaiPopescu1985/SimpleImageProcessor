@@ -43,10 +43,12 @@ public class MainWindow extends JFrame implements Window {
 	@Override
 	public void showImage(BufferedImage newImage) {
 		
-		image = newImage;
-		
-		setImageProportions();
-		visualizeImage();
+		new Thread(() -> {
+			image = newImage;
+			
+			setImageProportions();
+			visualizeImage();
+		}).run();
 	}
 	
 	private void visualizeImage() {
